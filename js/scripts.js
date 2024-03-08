@@ -6,13 +6,25 @@ let pokemonList = [
   { name: "Pikachu", height: 0.4, types: ["Electric", "None"] },
 ];
 
-for (let i = 0; i < pokemonList.length; i++) {
-  let name = pokemonList[i].name;
-  let height = pokemonList[i].height;
-  document.write(name + " (height: " + height + ")");
-  if (height >= 1.0) {
+function getPokemonDescription(pokemonObject) {
+  let nameDescription = pokemonObject.name;
+  let heightDescription = pokemonObject.height;
+  let typeDescription = pokemonObject.types;
+
+  document.write(
+    nameDescription +
+      " - Type [ " +
+      typeDescription +
+      " ]" +
+      " (Height: " +
+      heightDescription +
+      ")"
+  );
+  if (heightDescription > 1) {
     document.write(" - Wow, that's big! <br>");
   } else {
     document.write("<br>");
   }
 }
+
+pokemonList.forEach((pokemon) => getPokemonDescription(pokemon));
