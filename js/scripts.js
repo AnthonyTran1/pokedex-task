@@ -26,35 +26,30 @@ let pokemonRepository = (function () {
       document.write("This pokemon is not formatted correctly!" + "<br>");
     }
   }
-
+  function addListItem(pokemon) {
+    let pokemonList = document.querySelector(".pokemon-list");
+    let listPokemon = document.createElement("li");
+    let button = document.createElement("button");
+    button.innerHTML = pokemon.name;
+    button.classList.add("button-class");
+    listPokemon.appendChild(button);
+    pokemonList.appendChild(listPokemon);
+  }
   return {
     getAll: getAll,
     add: add,
+    addListItem: addListItem,
   };
 })();
 
-//pokemon description function
-function getPokemonDescription(pokemonObject) {
-  let nameDescription = pokemonObject.name;
-  let heightDescription = pokemonObject.height;
-  let typeDescription = pokemonObject.types;
-
-  document.write(
-    nameDescription +
-      " - Type [ " +
-      typeDescription +
-      " ]" +
-      " (Height: " +
-      heightDescription +
-      ")"
-  );
-  if (heightDescription > 1) {
-    document.write(" - Wow, that's big! <br>");
-  } else {
-    document.write("<br>");
-  }
-}
-
+//add new pokemon to repository
+let testPokemon1 = {
+  name: "Rayquaza",
+  height: 7,
+  types: ["Dragon", "Flying"],
+};
+pokemonRepository.add(testPokemon1);
 //execute forEach on the PokemonList from IIFE
-pokemonRepository.getAll().forEach((pokemon) => getPokemonDescription(pokemon));
-document.write("<br>");
+pokemonRepository.getAll().forEach(function (pokemon) {
+  pokemonRepository.addListItem(pokemon);
+});
