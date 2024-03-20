@@ -1,12 +1,22 @@
+fetch("https://pokeapi.co/api/v2/pokemon/")
+  .then(function (response) {
+    return response.json(); // This returns a promise!
+  })
+  .then(function (pokemonList) {
+    console.log(pokemonList); // The actual JSON response
+  })
+  .catch(function () {
+    // Error
+  });
+
+function showLoadingMessage() {}
+
+function hideLoadingMessage() {}
+
 //IIFE wrap on pokemonList
 let pokemonRepository = (function () {
-  let pokemonList = [
-    { name: "Bulbasaur", height: 0.7, types: ["Grass", "Poison"] },
-    { name: "Charmander", height: 0.6, types: ["Fire", "None"] },
-    { name: "Charizard", height: 1.7, types: ["Fire", "Flying"] },
-    { name: "Squirtle", height: 0.5, types: ["Water", "None"] },
-    { name: "Pikachu", height: 0.4, types: ["Electric", "None"] },
-  ];
+  let pokemonList = [];
+  let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=1025";
 
   // return functions
   function getAll() {
@@ -14,13 +24,7 @@ let pokemonRepository = (function () {
   }
   function add(pokemon) {
     //check if pokemon is of correct type of data
-    if (
-      typeof pokemon === "object" &&
-      typeof pokemon.name === "string" &&
-      typeof pokemon.height === "number" &&
-      typeof pokemon.types[0] === "string" &&
-      typeof pokemon.types[1] === "string"
-    ) {
+    if (typeof pokemon === "object" && "name" in pokemon) {
       pokemonList.push(pokemon);
     } else {
       document.write("This pokemon is not formatted correctly!" + "<br>");
@@ -41,24 +45,77 @@ let pokemonRepository = (function () {
     });
   }
   function showDetail(pokemon) {
-    console.log(pokemon);
+    loadDetails(pokemon).then(function () {
+      console.log(pokemon);
+    });
+  }
+  //load pokemon information from pokemonAPI
+  function loadList() {
+    //showLoadingMessage();
+    return fetch(apiUrl)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        json.results.forEach(function (item) {
+          let pokemon = {
+            name: item.name,
+            detailsUrl: item.url,
+          };
+          add(pokemon);
+        });
+        //hideLoadingMessage();
+      })
+      .catch(function (e) {
+        console.error(e);
+      });
+  }
+  function loadDetails(item) {
+    let url = item.detailsUrl;
+    return fetch(url)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (details) {
+        // Now we add the details to the item
+        item.imageUrl = details.sprites.front_default;
+        item.height = details.height;
+        item.types = details.types;
+      })
+      .catch(function (e) {
+        console.error(e);
+      });
   }
   return {
     getAll: getAll,
     add: add,
     addListItem: addListItem,
     showDetail: showDetail,
+    loadList: loadList,
+    loadDetails: loadDetails,
   };
 })();
 
+pokemonRepository.loadList().then(function () {
+  // Now the data is loaded!
+  pokemonRepository.getAll().forEach(function (pokemon) {
+    pokemonRepository.addListItem(pokemon);
+  });
+});
+
 //add new pokemon to repository
-let testPokemon1 = {
-  name: "Rayquaza",
-  height: 7,
-  types: ["Dragon", "Flying"],
-};
-pokemonRepository.add(testPokemon1);
+// let testPokemon1 = {
+//   name: "Rayquaza",
+//   height: 7,
+//   types: ["Dragon", "Flying"],
+// };
+// pokemonRepository.add(testPokemon1);
 //execute forEach on the PokemonList from IIFE
-pokemonRepository.getAll().forEach(function (pokemon) {
-  pokemonRepository.addListItem(pokemon);
+pokemonRepository.loadList().then(function () {
+  pokemonRepository.getAll().forEach(function (pokemon) {
+    pokemonRepository.addListItem(pokemon);
+  });
+  pokemonRepository.getAll().forEach(function (pokemon) {
+    pokemonRepository.addListItem(pokemon);
+  });
 });
