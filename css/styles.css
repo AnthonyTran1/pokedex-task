@@ -12,3 +12,41 @@
   color: black;
   border: 2px solid greenyellow;
 }
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  transition: opacity 0.75s, visibility 0.75s;
+}
+
+.loader-hideMessage {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-showMessage {
+  content: "";
+  width: 75px;
+  height: 75px;
+  border: 15px solid #dddddd;
+  border-top-color: red;
+  border-radius: 50%;
+  animation: loading 0.75s ease infinite;
+  text-align: center;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

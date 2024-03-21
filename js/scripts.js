@@ -9,10 +9,6 @@ fetch("https://pokeapi.co/api/v2/pokemon/")
     // Error
   });
 
-function showLoadingMessage() {}
-
-function hideLoadingMessage() {}
-
 //IIFE wrap on pokemonList
 let pokemonRepository = (function () {
   let pokemonList = [];
@@ -51,7 +47,7 @@ let pokemonRepository = (function () {
   }
   //load pokemon information from pokemonAPI
   function loadList() {
-    //showLoadingMessage();
+    showLoadingMessage();
     return fetch(apiUrl)
       .then(function (response) {
         return response.json();
@@ -64,7 +60,7 @@ let pokemonRepository = (function () {
           };
           add(pokemon);
         });
-        //hideLoadingMessage();
+        hideLoadingMessage();
       })
       .catch(function (e) {
         console.error(e);
@@ -86,6 +82,16 @@ let pokemonRepository = (function () {
         console.error(e);
       });
   }
+  function showLoadingMessage() {
+    let loader = document.querySelector("loader-showMessage");
+    document.appendChild(loader);
+  }
+
+  function hideLoadingMessage() {
+    let loader = document.querySelector("loader-showMessage");
+    document.removeChild(loader);
+  }
+
   return {
     getAll: getAll,
     add: add,
@@ -93,6 +99,8 @@ let pokemonRepository = (function () {
     showDetail: showDetail,
     loadList: loadList,
     loadDetails: loadDetails,
+    showLoadingMessage: showLoadingMessage,
+    hideLoadingMessage: hideLoadingMessage,
   };
 })();
 
@@ -103,18 +111,8 @@ pokemonRepository.loadList().then(function () {
   });
 });
 
-//add new pokemon to repository
-// let testPokemon1 = {
-//   name: "Rayquaza",
-//   height: 7,
-//   types: ["Dragon", "Flying"],
-// };
-// pokemonRepository.add(testPokemon1);
 //execute forEach on the PokemonList from IIFE
 pokemonRepository.loadList().then(function () {
-  pokemonRepository.getAll().forEach(function (pokemon) {
-    pokemonRepository.addListItem(pokemon);
-  });
   pokemonRepository.getAll().forEach(function (pokemon) {
     pokemonRepository.addListItem(pokemon);
   });
