@@ -1,14 +1,3 @@
-fetch("https://pokeapi.co/api/v2/pokemon/")
-  .then(function (response) {
-    return response.json(); // This returns a promise!
-  })
-  .then(function (pokemonList) {
-    console.log(pokemonList); // The actual JSON response
-  })
-  .catch(function () {
-    // Error
-  });
-
 //IIFE wrap on pokemonList
 let pokemonRepository = (function () {
   let pokemonList = [];
@@ -40,7 +29,7 @@ let pokemonRepository = (function () {
       showDetail(pokemon);
     });
   }
-  function showDetail(pokemon) {
+  function showDetails(pokemon) {
     loadDetails(pokemon).then(function () {
       console.log(pokemon);
     });
@@ -83,33 +72,27 @@ let pokemonRepository = (function () {
       });
   }
   function showLoadingMessage() {
-    let loader = document.querySelector("loader-showMessage");
-    document.appendChild(loader);
+    let loader = document.querySelector(".loader-showMessage");
+    console.log("LOADER", loader);
+    document.body.appendChild(loader);
   }
 
   function hideLoadingMessage() {
-    let loader = document.querySelector("loader-showMessage");
-    document.removeChild(loader);
+    let loader = document.querySelector(".loader-showMessage");
+    document.body.removeChild(loader);
   }
 
   return {
     getAll: getAll,
     add: add,
     addListItem: addListItem,
-    showDetail: showDetail,
+    showDetails: showDetails,
     loadList: loadList,
     loadDetails: loadDetails,
     showLoadingMessage: showLoadingMessage,
     hideLoadingMessage: hideLoadingMessage,
   };
 })();
-
-pokemonRepository.loadList().then(function () {
-  // Now the data is loaded!
-  pokemonRepository.getAll().forEach(function (pokemon) {
-    pokemonRepository.addListItem(pokemon);
-  });
-});
 
 //execute forEach on the PokemonList from IIFE
 pokemonRepository.loadList().then(function () {
