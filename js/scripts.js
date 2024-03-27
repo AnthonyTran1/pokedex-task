@@ -2,6 +2,7 @@
 let pokemonRepository = (function () {
   let pokemonList = [];
   let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=1025";
+  let modalContainer = document.querySelector("#modal-container");
 
   // return functions
   function getAll() {
@@ -31,7 +32,7 @@ let pokemonRepository = (function () {
   }
   function showDetails(pokemon) {
     loadDetails(pokemon).then(function () {
-      console.log(pokemon);
+      showModal(pokemon.name, pokemon.height, pokemon.imageUrl);
     });
   }
   //load pokemon information from pokemonAPI
@@ -76,11 +77,99 @@ let pokemonRepository = (function () {
     console.log("LOADER", loader);
     document.body.appendChild(loader);
   }
-
   function hideLoadingMessage() {
     let loader = document.querySelector(".loader-showMessage");
     document.body.removeChild(loader);
   }
+  function showModal(title, text, image) {
+    // Clear all existing modal content
+    modalContainer.innerHTML = "";
+
+    let modal = document.createElement("div");
+    modal.classList.add("modal");
+
+    // Add the new modal content
+    let closeButtonElement = document.createElement("button");
+    closeButtonElement.classList.add("modal-close");
+    closeButtonElement.innerText = "Close";
+    closeButtonElement.addEventListener("click", hideModal);
+
+    let titleElement = document.createElement("h1");
+    titleElement.innerText = title;
+
+    let contentElement = document.createElement("p");
+    contentElement.innerText = "Height: " + text;
+
+    let imageElement = document.createElement("img");
+    imageElement.src = image;
+
+    modal.appendChild(closeButtonElement);
+    modal.appendChild(titleElement);
+    modal.appendChild(contentElement);
+    modal.appendChild(imageElement);
+    modalContainer.appendChild(modal);
+
+    modalContainer.classList.add("is-visible");
+  }
+  function hideModal() {
+    let modalContainer = document.querySelector("#modal-container");
+    modalContainer.classList.remove("is-visible");
+
+    if (dialogPromiseReject) {
+      dialogPromiseReject();
+      dialogPromiseReject = null;
+    }
+  }
+  function showDialog(title, text) {
+    showModal(title, text);
+
+    //we have defined modaleContainer here
+    let modalContainer = document.querySelector("#modal-container");
+
+    //we want to add a confirm and cancel button to the modal
+    let modal = modalContainer.querySelector(".modal");
+
+    let confirmButton = document.createElement("button");
+    confirmButton.classList.add("modal-confirm");
+    confirmButton.innerText = "Confirm";
+
+    let cancelButton = document.createElement("button");
+    cancelButton.classList.add("modal-cancel");
+    cancelButton.innerText = "Cancel";
+
+    modal.appendChild(confirmButton);
+    modal.appendChild(cancelButton);
+
+    //we want to focus the confirm button so that the user can simply press Enter
+    confirmButton.focus();
+
+    return new Promise((resolve, reject) => {
+      cancelButton.addEventListener("click", hideModal);
+      confirmButton.addEventListener("click", () => {
+        dialogPromiseReject = null; // Reset this
+        hideModal();
+        resolve();
+      });
+
+      // This can be used to reject from other functions
+      dialogPromiseReject = reject;
+    });
+  }
+  let dialogPromiseReject;
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
+      hideModal();
+    }
+  });
+
+  modalContainer.addEventListener("click", (e) => {
+    // Since this is also triggered when clicking INSIDE the modal container,
+    // We only want to close if the user clicks directly on the overlay
+    let target = e.target;
+    if (target === modalContainer) {
+      hideModal();
+    }
+  });
 
   return {
     getAll: getAll,
