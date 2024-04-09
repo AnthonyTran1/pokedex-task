@@ -112,3 +112,19 @@
   margin-right: auto;
   width: 20%;
 }
+
+.pokemon-list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  column-gap: 20px;
+}
+
+.pokemon-list li {
+  list-style: none;
+}
+
+.pokemon-list .button-class {
+  height: 200px;
+  width: 200px;
+}
