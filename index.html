@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My PokeDex</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -11,8 +12,8 @@
     />
 
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
-    <title>Document</title>
   </head>
+
   <body>
     <div class="loader-showMessage"></div>
 
@@ -26,6 +27,7 @@
       Launch demo modal
     </button>
 
+    <!-- Modal -->
     <div
       class="modal fade"
       id="exampleModal"
@@ -61,12 +63,11 @@
         </div>
       </div>
     </div>
-
-    <ul class="pokemon-list"></ul>
-    <div id="modal-container"></div>
-    <script src="js/promise-polyfill.js"></script>
-    <script src="js/fetch-polyfill.js"></script>
-    <script src="js/scripts.js"></script>
+    <!-- <ul class="pokemon-list"> -->
+    <ul class="pokemon-list">
+      <li class="pokemon-list-item"></li>
+    </ul>
+    <div id="modalx-container"></div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -84,5 +85,9 @@
       integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
       crossorigin="anonymous"
     ></script>
+
+    <script src="js/promise-polyfill.js"></script>
+    <script src="js/fetch-polyfill.js"></script>
+    <script src="js/scripts.js"></script>
   </body>
 </html>
