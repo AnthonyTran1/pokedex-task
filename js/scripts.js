@@ -2,7 +2,7 @@
 let pokemonRepository = (function () {
   let pokemonList = [];
   let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=1025";
-  let modalContainer = document.querySelector("#exampleModal");
+  let modalContainer = document.querySelector("#pokemonModal");
 
   // return functions
   function getAll() {
@@ -16,17 +16,24 @@ let pokemonRepository = (function () {
       document.write("This pokemon is not formatted correctly!" + "<br>");
     }
   }
-  function addListItem(pokemon) {
+  async function addListItem(pokemon) {
     let pokemonList = document.querySelector(".pokemon-list");
     let listPokemon = document.createElement("list-group-item");
-    let button = document.createElement("button");
+    let btn = document.createElement("btn");
+    let pokemonImg = document.createElement("img");
+    pokemonImg = await loadDetails(pokemon);
+    console.log(pokemonImg);
+    // pokemonImg.setAttribute("src", pokemonImg);
 
-    button.innerHTML = pokemon.name;
-    button.classList.add("button-class");
-    listPokemon.appendChild(button);
+    btn.innerHTML = pokemon.name;
+    btn.classList.add("btn-class");
+    btn.setAttribute("data-toggle", "modal");
+    btn.setAttribute("data-target", "#pokemonModal");
+
+    listPokemon.appendChild(btn);
     pokemonList.appendChild(listPokemon);
 
-    button.addEventListener("click", function (event) {
+    btn.addEventListener("click", function (event) {
       showDetails(pokemon);
     });
   }
@@ -64,6 +71,7 @@ let pokemonRepository = (function () {
       })
       .then(function (details) {
         // Now we add the details to the item
+        item.name = details.name;
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
         item.types = details.types;
@@ -86,6 +94,7 @@ let pokemonRepository = (function () {
     let modalTitle = $(".modal-title");
     let modalHeader = $(".modal-header");
 
+    console.log(pokemon);
     modalTitle.empty();
     modalBody.empty();
 
@@ -101,65 +110,6 @@ let pokemonRepository = (function () {
     modalBody.append(imageElement);
     modalBody.append(heightElement);
   }
-  // function hideModal() {
-  //   let modalContainer = document.querySelector("#exampleModal");
-  //   modalContainer.classList.remove("is-visible");
-
-  //   if (dialogPromiseReject) {
-  //     dialogPromiseReject();
-  //     dialogPromiseReject = null;
-  //   }
-  // }
-  // function showDialog(title, text) {
-  //   showModal(title, text);
-
-  //   //we have defined modaleContainer here
-  //   let modalContainer = document.querySelector("#modal-container");
-
-  //   //we want to add a confirm and cancel button to the modal
-  //   let modal = modalContainer.querySelector(".modal");
-
-  //   let confirmButton = document.createElement("button");
-  //   confirmButton.classList.add("modal-confirm");
-  //   confirmButton.innerText = "Confirm";
-
-  //   let cancelButton = document.createElement("button");
-  //   cancelButton.classList.add("modal-cancel");
-  //   cancelButton.innerText = "Cancel";
-
-  //   modal.appendChild(confirmButton);
-  //   modal.appendChild(cancelButton);
-
-  //   //we want to focus the confirm button so that the user can simply press Enter
-  //   confirmButton.focus();
-
-  //   return new Promise((resolve, reject) => {
-  //     cancelButton.addEventListener("click", hideModal);
-  //     confirmButton.addEventListener("click", () => {
-  //       dialogPromiseReject = null; // Reset this
-  //       hideModal();
-  //       resolve();
-  //     });
-
-  //     // This can be used to reject from other functions
-  //     dialogPromiseReject = reject;
-  //   });
-  // }
-  // let dialogPromiseReject;
-  // window.addEventListener("keydown", (e) => {
-  //   if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
-  //     hideModal();
-  //   }
-  // });
-
-  // modalContainer.addEventListener("click", (e) => {
-  //   // Since this is also triggered when clicking INSIDE the modal container,
-  //   // We only want to close if the user clicks directly on the overlay
-  //   let target = e.target;
-  //   if (target === modalContainer) {
-  //     hideModal();
-  //   }
-  // });
 
   return {
     getAll: getAll,
