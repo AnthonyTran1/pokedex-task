@@ -16,14 +16,10 @@ let pokemonRepository = (function () {
       document.write("This pokemon is not formatted correctly!" + "<br>");
     }
   }
-  async function addListItem(pokemon) {
+  function addListItem(pokemon) {
     let pokemonList = document.querySelector(".pokemon-list");
     let listPokemon = document.createElement("list-group-item");
     let btn = document.createElement("btn");
-    let pokemonImg = document.createElement("img");
-    pokemonImg = await loadDetails(pokemon);
-    console.log(pokemonImg);
-    // pokemonImg.setAttribute("src", pokemonImg);
 
     btn.innerHTML = pokemon.name;
     btn.classList.add("btn-class");
